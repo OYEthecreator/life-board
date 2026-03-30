@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome — LIFEBOARD</title>
+  <style>
+   /* ==========================
+   MASSIVE CINEMATIC WELCOME CSS
+========================== */
+
+/* Global resets */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(-45deg, #f6f8fa, #01101f, #000e1b, #010911);
+  background-size: 400% 400%;
+  animation: crazyGradient 15s ease infinite;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Animated background gradient */
+@keyframes crazyGradient {
+  0% { background-position: 0% 50%; }
+  25% { background-position: 50% 50%; }
+  50% { background-position: 100% 50%; }
+  75% { background-position: 50% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Welcome card */
+.welcome-container {
+  width: 700px;
+  max-width: 90%;
+  padding: 4rem;
+  text-align: center;
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  box-shadow: 0 15px 60px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  position: relative;
+  animation: fadeInScale 1.5s ease forwards;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Fade in + scale */
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Card fade out on click */
+.fade-out {
+  opacity: 0;
+  transform: scale(0.95) rotate(-2deg);
+  transition: all 0.8s ease;
+}
+
+/* Logo */
+.logo {
+  font-size: 4rem;
+  font-weight: 900;
+  margin-bottom: 2rem;
+  color: #00aaff;
+  letter-spacing: 4px;
+  text-shadow:
+    0 0 10px rgba(0, 170, 255, 0.5),
+    0 0 20px rgba(0, 170, 255, 0.4),
+    0 0 30px rgba(0, 170, 255, 0.3);
+  animation: breathe 3s ease-in-out infinite;
+}
+
+/* Breathing effect for logo */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.9; }
+}
+
+/* Welcome headline */
+h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.1;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0, 170, 255, 0.3);
+}
+
+/* Subtext */
+p {
+  font-size: 1.2rem;
+  color: #cce6ff;
+  opacity: 0.85;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* Floating arrow button */
+.next-arrow {
+  position: absolute;
+  bottom: 50px;
+  right: 60px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007bff, #00aaff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 12px 35px rgba(0, 170, 255, 0.5);
+  cursor: pointer;
+  animation: breatheArrow 2.5s ease-in-out infinite;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Arrow hover effect */
+.next-arrow:hover {
+  transform: translateX(6px) scale(1.08);
+  box-shadow: 0 15px 45px rgba(0, 170, 255, 0.7);
+}
+
+/* Arrow icon */
+.next-arrow span {
+  color: white;
+  font-size: 2rem;
+  font-weight: 700;
+  transition: transform 0.4s ease;
+}
+
+.next-arrow:hover span {
+  transform: translateX(5px);
+}
+
+/* Breathing animation for arrow */
+@keyframes breatheArrow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+/* Responsive adjustments */
+@media(max-width: 768px){
+  .welcome-container { padding: 3rem; }
+  .logo { font-size: 2rem; }
+  h1 { font-size: 2.2rem; }
+  p { font-size: 1rem; }
+  .next-arrow { width: 60px; height: 60px; bottom: 40px; right: 40px; }
+  .next-arrow span { font-size: 1.8rem; }
+}
+
+  </style>
+</head>
+<body>
+  <div class="welcome-container" id="welcomeContainer">
+    <div class="logo">LIFEBOARD</div>
+    <h1 id="welcomeText">Welcome!</h1>
+    <p>Let’s set things up so your experience feels personal.</p>
+  </div>
+
+  <div class="next-arrow" id="continueBtn">
+    <span>→</span>
+  </div>
+   <script src="login.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const email = localStorage.getItem("current_user_email");
+  if (!email) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  const storedUser = localStorage.getItem("lifeboard_user_" + email);
+  if (!storedUser) {
+    window.location.href = "question1.html";
+    return;
+  }
+
+  const userData = JSON.parse(storedUser);
+  const fullName = userData.name || "";
+  const firstName = fullName.split(" ")[0];
+
+  const welcomeText = document.getElementById("welcomeText");
+  if (welcomeText) {
+    welcomeText.textContent = `Welcome, ${firstName}! 👋🏽`;
+  }
+
+  // 👇 ADD THIS to make the arrow redirect
+  const continueBtn = document.getElementById("continueBtn");
+  if (continueBtn) {
+    continueBtn.addEventListener("click", function () {
+      window.location.href = "question1.html";
+    });
+  }
+});
+</script>
+</body>
+</html>

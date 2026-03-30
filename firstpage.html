@@ -1,0 +1,538 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LifeBoard</title>
+  <link rel="stylesheet" href="index.css" />
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+</head>
+<body>
+<div id="dashboardWelcome" class="popup">
+  <div class="popup-content">
+    <span id="closeWelcome" class="close-btn">&times;</span>
+    <h2 id="welcomeTitle"></h2>
+    <p id="welcomeMessage"></p>
+  </div>
+</div>
+
+
+<div class="dashboard" data-aos="fade-down" data-aos-duration="2000">
+  <button id="sidebarToggle" class="hamburger" data-aos="flip-right" data-aos-duration="1800">☰</button>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" >
+    <div class="brand" >
+      <div class="brand-logo"><img src="./images/Screenshot_2025-09-26_091052-removebg-preview.png" alt=""></div>
+    </div>
+
+    <div class="profile">
+      <img alt="avatar" src="images/" />
+      <div class="profile-meta" data-aos="slide-right" data-aos-duration="2500">
+        <div class="username">Oye</div>
+      </div>
+    </div>
+
+    <nav class="side-nav">
+      <a href="#" class="nav-btn active" data-aos="zoom-in-up">Tasks</a>
+      <a href="habits.html" data-aos="zoom-in-left" data-aos-delay="200">Habits</a>
+      <a href="journal.html" data-aos="zoom-in-right" data-aos-delay="300">Journal</a>
+      <a href="analytics.html" data-aos="zoom-in-down" data-aos-delay="400">Analytics</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="quick-links" >
+        <button id="themeToggle" title="dark-mode">🌜</button>
+        <button title="Settings" onclick="settingsManager.openSettings()">⚙️</button>
+        <button title="Logout">⎋</button>
+      </div>
+    </div>
+  </aside>
+  <!-- SETTINGS OVERLAY -->
+<div id="settingsOverlay" class="settings-overlay">
+  <!-- HEADER -->
+  <div class="settings-header">
+    <button id="settingsBack" class="back-arrow">←</button>
+    <h2>Account Settings</h2>
+    <div class="header-actions">
+      <button class="btn-search" title="Search settings">🔍</button>
+      <button class="btn-help" title="Help">?</button>
+    </div>
+  </div>
+  <div class="settings-container">
+    <!-- SIDEBAR NAVIGATION -->
+    <div class="settings-sidebar">
+      <div class="sidebar-group">
+        <h3 class="group-title">ACCOUNT</h3>
+        <div class="sidebar-section active" data-section="profile">
+          <span class="section-icon">👤</span>
+          <span class="section-text">Profile Information</span>
+          <span class="section-badge">Personal</span>
+        </div>
+        <div class="sidebar-section" data-section="security">
+          <span class="section-icon">🔒</span>
+          <span class="section-text">Security & Login</span>
+          <span class="section-badge">2FA</span>
+        </div>
+        <div class="sidebar-section" data-section="billing">
+          <span class="section-icon">💳</span>
+          <span class="section-text">Billing & Subscription</span>
+          <span class="section-badge">Pro</span>
+        </div>
+      </div>
+
+      <div class="sidebar-group">
+        <h3 class="group-title">PREFERENCES</h3>
+        <div class="sidebar-section" data-section="notifications">
+          <span class="section-icon">🔔</span>
+          <span class="section-text">Notifications</span>
+          <span class="section-badge">12</span>
+        </div>
+        <div class="sidebar-section" data-section="appearance">
+          <span class="section-icon">🎨</span>
+          <span class="section-text">Appearance</span>
+        </div>
+        <div class="sidebar-section" data-section="language">
+          <span class="section-icon">🌐</span>
+          <span class="section-text">Language & Region</span>
+        </div>
+        <div class="sidebar-section" data-section="accessibility">
+          <span class="section-icon">♿</span>
+          <span class="section-text">Accessibility</span>
+        </div>
+      </div>
+
+      <div class="sidebar-group">
+        <h3 class="group-title">PRIVACY</h3>
+        <div class="sidebar-section" data-section="privacy">
+          <span class="section-icon">🛡️</span>
+          <span class="section-text">Privacy & Data</span>
+        </div>
+        <div class="sidebar-section" data-section="sharing">
+          <span class="section-icon">🔗</span>
+          <span class="section-text">Sharing & Permissions</span>
+        </div>
+        <div class="sidebar-section" data-section="devices">
+          <span class="section-icon">📱</span>
+          <span class="section-text">Connected Devices</span>
+          <span class="section-badge">3</span>
+        </div>
+      </div>
+
+      <div class="sidebar-group">
+        <h3 class="group-title">ADVANCED</h3>
+        <div class="sidebar-section" data-section="storage">
+          <span class="section-icon">💾</span>
+          <span class="section-text">Storage & Data</span>
+        </div>
+        <div class="sidebar-section" data-section="api">
+          <span class="section-icon">⚡</span>
+          <span class="section-text">API & Integrations</span>
+        </div>
+        <div class="sidebar-section" data-section="advanced">
+          <span class="section-icon">🔧</span>
+          <span class="section-text">Advanced Settings</span>
+        </div>
+      </div>
+
+      <div class="sidebar-group">
+        <h3 class="group-title">SUPPORT</h3>
+        <div class="sidebar-section" data-section="help">
+          <span class="section-icon">❓</span>
+          <span class="section-text">Help & Support</span>
+        </div>
+        <div class="sidebar-section" data-section="about">
+          <span class="section-icon">ℹ️</span>
+          <span class="section-text">About LifeBoard</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="settings-content" id="settingsContent">
+      <!-- Dynamic content loaded by JavaScript -->
+    </div>
+  </div>
+</div>
+  <!-- MAIN -->
+  <main class="main" data-aos="fade-up" data-aos-duration="2000">
+    <!-- TOP ROW -->
+    <section class="top-row" data-aos="fade-down" data-aos-duration="2500">
+      <div class="greeting-block" data-aos="zoom-in-up">
+        <div id="greet-name" class="who">Hello, User 👋</div>
+        <div id="today-date" class="date-small">Friday • Sep 5</div>
+      </div>
+
+      <div class="progress-block" data-aos="slide-up" data-aos-duration="2600">
+        <div class="label">Overall Progress</div>
+        <div class="progress-track">
+          <div id="overall-progress" class="progress-fill"></div>
+        </div>
+        <div id="progress-meta-count" class="progress-meta small muted">0 / 0</div>
+      </div>
+
+      <div class="stats-grid" data-aos="flip-down" data-aos-duration="2600">
+        <div class="stat" data-aos="zoom-in" data-aos-delay="100">
+          <div class="stat-title small muted">Today</div>
+          <div id="val-today" class="stat-value">0</div>
+        </div>
+        <div class="stat" data-aos="zoom-in" data-aos-delay="200">
+          <div class="stat-title small muted">Completed</div>
+          <div id="val-completed" class="stat-value">0</div>
+        </div>
+        <div class="stat" data-aos="zoom-in" data-aos-delay="300">
+          <div class="stat-title small muted">Pending</div>
+          <div id="val-pending" class="stat-value">0</div>
+        </div>
+        <div class="stat" data-aos="zoom-in" data-aos-delay="400">
+          <div class="stat-title small muted">Overdue</div>
+          <div id="val-overdue" class="stat-value">0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GRID -->
+    <section class="grid" data-aos="fade-up" data-aos-duration="3000">
+      <!-- COLUMN A -->
+      <div class="col" data-aos="slide-right" data-aos-duration="2500">
+        <div class="container" data-aos="zoom-in-up">
+          <div class="task-chart-container" data-aos="flip-right">
+            <div class="chart-header" data-aos="fade-down">
+              <h2>Task Performance Analytics</h2>
+              <select id="chart-timeframe">
+                <option value="week">Last 7 Days</option>
+                <option value="month">Last 30 Days</option>
+                <option value="quarter">Last 90 Days</option>
+              </select>
+            </div>
+            <div class="chart-wrapper" data-aos="zoom-in">
+              <canvas id="taskProgressChart"></canvas>
+            </div>
+            <div class="chart-legend" data-aos="slide-up">
+              <div class="legend-item completed">Completed</div>
+              <div class="legend-item pending">Pending</div>
+              <div class="legend-item overdue">Overdue</div>
+            </div>
+          </div>
+
+          <form id="postForm" class="card task-form" data-aos="fade-up" data-aos-delay="200">
+            <h2>Create New Task</h2>
+            <div class="form-group" data-aos="zoom-in-left">
+              <input type="text" id="title" placeholder="Task title..." required />
+            </div>
+            <div class="form-group" data-aos="zoom-in-right">
+              <textarea id="body" placeholder="Task description..." required></textarea>
+            </div>
+            <div class="form-row" data-aos="slide-up">
+              <select id="task-category">
+                <option value="work">💼 Work</option>
+                <option value="study">📚 Study</option>
+                <option value="personal">👤 Personal</option>
+                <option value="health">🏋️ Health</option>
+                <option value="other">📦 Other</option>
+              </select>
+              <input type="date" id="task-deadline" />
+            </div>
+            <div class="form-row" data-aos="flip-up">
+              <select id="task-priority">
+                <option value="low">🟢 Low Priority</option>
+                <option value="medium">🟡 Medium Priority</option>
+                <option value="high">🔴 High Priority</option>
+              </select>
+            </div>
+            <button type="submit" class="create-btn" data-aos="zoom-out-up">🚀 Create Task</button>
+          </form>
+
+          <div id="loading" class="loading-hidden" data-aos="zoom-out-down">
+            <div class="spinner"></div>
+            <p>Loading tasks...</p>
+          </div>
+
+          <div class="tasks-container" data-aos="slide-up">
+            <div class="tasks-header" data-aos="flip-down">
+              <h3>Your Tasks</h3>
+              <div class="task-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="pending">Pending</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+              </div>
+            </div>
+            <ul id="posts" class="posts-list">
+              <!-- Tasks -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMN B -->
+      <div class="col" data-aos="slide-up" data-aos-duration="2600">
+        <div class="card priority-widget" data-aos="zoom-in-left">
+          <div class="card-header">
+            <div class="card-title">🔴 High Priority Tasks</div>
+            <span class="badge" id="priority-count">0</span>
+          </div>
+          <ul id="priority-tasks-list" class="priority-list">
+            <li class="muted small">No high priority tasks</li>
+          </ul>
+        </div>
+
+        <div class="card deadlines-widget" data-aos="zoom-in-right" data-aos-delay="200">
+          <div class="card-header">
+            <div class="card-title">📅 Upcoming Deadlines</div>
+            <span class="badge" id="deadline-count">0</span>
+          </div>
+          <ul id="deadlines-list" class="deadlines-list">
+            <li class="muted small">No upcoming deadlines</li>
+          </ul>
+        </div>
+
+        <div class="card timer-widget" data-aos="fade-up" data-aos-delay="300">
+          <div class="card-header">
+            <div class="card-title">⏱️ Focus Timer</div>
+            <div class="timer-presets">
+              <button class="preset-btn" data-minutes="25">Pomodoro</button>
+              <button class="preset-btn" data-minutes="52">Deep Work</button>
+            </div>
+          </div>
+          <div id="timer-display" class="timer-display">25:00</div>
+          <div class="timer-controls">
+            <button id="timer-start" class="timer-btn start">▶️ Start</button>
+            <button id="timer-pause" class="timer-btn pause">⏸️ Pause</button>
+            <button id="timer-reset" class="timer-btn reset">🔄 Reset</button>
+          </div>
+          <div class="timer-stats">
+            <div class="stat">Sessions: <span id="session-count">0</span></div>
+            <div class="stat">Focus Time: <span id="total-focus-time">0h 0m</span></div>
+          </div>
+        </div>
+
+        <div class="card stats-widget" data-aos="flip-up" data-aos-delay="400">
+          <div class="card-title">📊 Task Statistics</div>
+          <div class="stats-grid-mini">
+            <div class="stat-mini" data-aos="zoom-in" data-aos-delay="200">
+              <div class="stat-value-mini" id="weekly-completed">0</div>
+              <div class="stat-label-mini">This Week</div>
+            </div>
+            <div class="stat-mini" data-aos="zoom-in" data-aos-delay="300">
+              <div class="stat-value-mini" id="completion-rate">0%</div>
+              <div class="stat-label-mini">Success Rate</div>
+            </div>
+            <div class="stat-mini" data-aos="zoom-in" data-aos-delay="400">
+              <div class="stat-value-mini" id="avg-completion">0h</div>
+              <div class="stat-label-mini">Avg. Time</div>
+            </div>
+          </div>
+          <div class="productivity-score" data-aos="zoom-out-up">
+            <div class="score-label">Productivity Score</div>
+            <div class="score-bar">
+              <div class="score-fill" id="productivity-fill" style="width: 0%"></div>
+            </div>
+            <div class="score-value" id="productivity-value">0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMN C -->
+      <div class="col" data-aos="fade-left" data-aos-duration="2500">
+        <div class="card calendar-widget" data-aos="zoom-out-left">
+          <div class="card-header">
+            <div class="card-title">📅 Task Calendar</div>
+            <div class="calendar-nav">
+              <button id="prev-month" class="nav-btn">‹</button>
+              <span id="current-month">September 2024</span>
+              <button id="next-month" class="nav-btn">›</button>
+            </div>
+          </div>
+          <div class="calendar-grid" id="calendar-grid"></div>
+          <div class="calendar-legend">
+            <div class="legend-dot today"></div> Today
+            <div class="legend-dot has-tasks"></div> Tasks
+          </div>
+        </div>
+
+        <div class="card quick-actions" data-aos="flip-left" data-aos-delay="200">
+          <div class="card-title">⚡ Quick Actions</div>
+          <div class="actions-grid">
+            <button class="action-btn" id="quick-task">➕ Quick Task</button>
+            <button class="action-btn" id="bulk-complete">✅ Complete All</button>
+            <button class="action-btn" id="export-tasks">📤 Export</button>
+            <button class="action-btn" id="clear-completed">🗑️ Clean Up</button>
+          </div>
+        </div>
+
+        <div class="card insights-widget" data-aos="slide-left" data-aos-delay="300">
+          <div class="card-title">💡 Task Insights</div>
+          <div class="insights-content">
+            <div class="insight-item" data-aos="zoom-in-up">
+              <div class="insight-icon">📈</div>
+              <div class="insight-text">
+                <strong>Peak Productivity:</strong>
+                <span id="peak-hours">10:00 AM - 12:00 PM</span>
+              </div>
+            </div>
+            <div class="insight-item" data-aos="zoom-in-up" data-aos-delay="200">
+              <div class="insight-icon">⏰</div>
+              <div class="insight-text">
+                <strong>Avg. Completion:</strong>
+                <span id="avg-completion-time">2 hours</span>
+              </div>
+            </div>
+            <div class="insight-item" data-aos="zoom-in-up" data-aos-delay="400">
+              <div class="insight-icon">🔥</div>
+              <div class="insight-text">
+                <strong>Current Streak:</strong>
+                <span id="current-streak">0 days</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card activity-widget" data-aos="zoom-in-down">
+          <div class="card-title">🔄 Recent Activity</div>
+          <div class="activity-feed" id="activity-feed">
+            <div class="activity-item" data-aos="fade-up">
+              <div class="activity-time">Just now</div>
+              <div class="activity-text">Welcome to your task manager!</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card weather-widget" data-aos="fade-up" data-aos-delay="400">
+          <div class="card-title">🌤️ Weather & Focus</div>
+          <div id="weather-content">
+            <div class="weather-location">Loading...</div>
+            <div class="weather-temp">--°C</div>
+            <div class="weather-desc">--</div>
+          </div>
+          <div class="focus-suggestion">
+            <div class="suggestion-text" id="focus-suggestion">
+              Perfect weather for focused work!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM STRIP -->
+    <section class="bottom-strip" data-aos="fade-up" data-aos-duration="2500">
+      <div class="bottom-card" data-aos="flip-up">
+        <div class="motivation-text">"Productivity is never an accident."</div>
+        <div class="motivation-author">- Paul J. Meyer</div>
+      </div>
+      <div class="bottom-card" data-aos="flip-up" data-aos-delay="200">
+        <div class="daily-tip">
+          <span class="tip-icon">💡</span>
+          <span id="daily-tip-text">Break large tasks into 25-minute sessions</span>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</div>
+
+<!-- AOS JS -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 1800,
+    easing: 'ease-in-out',
+    once: false,
+    mirror: true,
+    offset: 60,
+  });
+</script>
+  <script type="module" src="task.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="login.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"></script>
+
+<canvas id="taskProgressChart"></canvas>
+
+<script>
+const button = document.getElementById('themeToggle');
+
+// Your color combos as palettes: [color1, color2, color3]
+const themes = [
+  // 1. Jet Black & Polished Silver
+  ['#000000', '#1A1A1A', '#C0C0C0'],
+
+  // 2. Matte Charcoal & Gunmetal
+  ['#0F0F0F', '#2B2B2B', '#8E8E8E'],
+
+  // 3. Obsidian & Soft Gold
+  ['#050505', '#222222', '#D1B75F'],
+
+  // 4. Black Chrome
+  ['#0A0A0A', '#1F1F1F', '#9D9D9D'],
+
+  // 5. Deep Graphite & Champagne
+  ['#111111', '#292929', '#E0C99D'],
+
+  // 6. Phantom Black & Platinum
+  ['#000000', '#191919', '#DADADA']
+];
+
+
+let current = 0;
+
+function applySmartTheme(combo){
+  const [c1, c2, c3] = combo;
+
+  document.querySelectorAll('*').forEach(el=>{
+    // Main background
+    el.style.background = c3;
+    // Primary text
+    el.style.color = c2;
+
+    // Buttons
+    if(el.tagName === 'BUTTON'){
+      el.style.background = c1;
+      el.style.color = c2;
+      el.style.boxShadow = `0 0 20px ${c1}`;
+      el.style.borderColor = c2;
+    }
+
+    // Inputs / textareas / selects
+    if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT'){
+      el.style.background = c2;
+      el.style.color = c3;
+      el.style.borderColor = c1;
+    }
+
+    // Popups / modals
+    if(el.classList.contains('popup')){
+      el.style.background = c2;
+      el.style.color = c3;
+      el.style.boxShadow = `0 4px 20px ${c1}50`;
+    }
+
+    // Text-glow elements
+    if(el.classList.contains('text-glow')){
+      el.style.textShadow = `0 0 8px ${c2}, 0 0 16px ${c1}`;
+    }
+  });
+}
+
+button.addEventListener('click',()=>{
+  if(current < themes.length){
+    applySmartTheme(themes[current]);
+    current++;
+  } else {
+    // Reset all inline styles to default
+    document.querySelectorAll('*').forEach(el=>{
+      el.style.background = '';
+      el.style.color = '';
+      el.style.borderColor = '';
+      el.style.boxShadow = '';
+    });
+    current = 0;
+  }
+});
+
+</script>
+
+</body>
+</html>
+

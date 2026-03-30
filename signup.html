@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — TaskFlow</title>
+  <style>
+    /* ======= GLOBAL STYLES ======= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(145deg, #001f3f, #011122, #f6f6f7);
+      background-size: 300% 300%;
+      animation: gradientFlow 12s ease infinite;
+      overflow: hidden;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ======= CONTAINER ======= */
+    .signup-container {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 24px;
+      padding: 3rem 3.5rem;
+      width: 400px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      color: #fff;
+      transition: all 0.8s ease;
+    }
+
+    .fade-out {
+      opacity: 0;
+      transform: scale(0.96);
+      transition: all 0.8s ease;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .input-group {
+      text-align: left;
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+      opacity: 0.85;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: none;
+      outline: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: all 0.3s ease;
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    input:focus {
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.4);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 1.2rem;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #007bff, #00aaff);
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #0066cc, #0088ee);
+      transform: scale(1.02);
+    }
+
+    .switch-link {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      opacity: 0.85;
+    }
+
+    .switch-link a {
+      color: #4da3ff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .switch-link a:hover {
+      color: #82c7ff;
+      text-decoration: underline;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1.8rem;
+      color: #fff;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(0, 136, 255, 0.4);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .signup-container > * {
+      animation: fadeIn 1s ease forwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container" id="signupContainer">
+    <div class="logo">LIFEBOARD</div>
+    <h1>Create Your Account</h1>
+
+    <div class="input-group">
+      <label>Full Name</label>
+      <input type="text" id="name" placeholder="" required />
+    </div>
+
+    <div class="input-group">
+      <label>Email Address</label>
+      <input type="email" id="email" placeholder="example@mail.com" required />
+    </div>
+
+    <div class="input-group">
+      <label>Date of Birth</label>
+      <input type="text" id="dob" placeholder="00/00/00" required />
+    </div>
+
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="••••••••" required />
+    </div>
+
+    <button id="signupBtn">Sign Up</button>
+
+    <div class="switch-link">
+      Already have an account? <a href="login.html" id="loginLink">Login</a>
+    </div>
+  </div>
+
+
+<script>
+
+
+</script>
+  <script src="login.js"></script>
+</body>
+</html>

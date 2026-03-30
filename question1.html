@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeBoard Onboarding - Question 1</title>
+<style>
+/* ===== BODY ===== */
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif; }
+
+body {
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: linear-gradient(135deg, #000010, #000033, #001a4d);
+  color:#fff;
+  overflow:hidden;
+}
+
+/* ===== CARD ===== */
+.question-card {
+  width:650px;
+  max-width:90%;
+  padding:4rem;
+  border-radius:35px;
+  background: rgba(10,10,35,0.25); /* glass effect */
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  box-shadow:0 25px 60px rgba(0,0,0,0.6);
+  text-align:center;
+  position:relative;
+  transition: all 0.8s ease;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.question-card.fade-out { 
+  opacity:0; 
+  transform: scale(0.9) translateY(-20px); 
+  filter: blur(4px);
+}
+
+/* ===== LOGO ===== */
+.logo {
+  font-size:4rem;
+  font-weight:900;
+  color:#ffffff;
+  margin-bottom:2rem;
+  letter-spacing:4px;
+  text-shadow:0 0 20px rgba(0,245,255,0.7),0 0 40px rgba(0,245,255,0.5);
+  animation:breathe 3s ease-in-out infinite;
+}
+@keyframes breathe { 
+  0%,100%{transform:scale(1);} 
+  50%{transform:scale(1.06);} 
+}
+
+/* ===== HEADLINE ===== */
+h1 {
+  font-size:2.5rem;
+  font-weight:700;
+  margin-bottom:2rem;
+  color:#e0e6ff;
+  text-shadow:0 0 15px rgba(0,180,255,0.6);
+}
+
+/* ===== BUTTONS ===== */
+.answer-btn {
+  width:100%;
+  max-width:500px;
+  padding:1.3rem 2rem;
+  margin:0.8rem 0;
+  border:none;
+  border-radius:20px;
+  background: rgba(255,255,255,0.05);
+  color:#fff;
+  font-size:1.2rem;
+  font-weight:600;
+  cursor:pointer;
+  backdrop-filter:blur(15px);
+  -webkit-backdrop-filter:blur(15px);
+  box-shadow:0 10px 30px rgba(0,180,255,0.25);
+  transition: all 0.3s ease;
+}
+.answer-btn:hover { transform:scale(1.05); box-shadow:0 15px 40px rgba(0,180,255,0.5); }
+.answer-btn.selected { background: rgba(0,180,255,0.6); box-shadow:0 15px 40px rgba(0,220,255,0.8); }
+
+/* ===== PROGRESS BAR ===== */
+.progress-container {
+  width:100%;
+  height:12px;
+  background: rgba(255,255,255,0.08);
+  border-radius:10px;
+  margin-top:2.5rem;
+  overflow:hidden;
+}
+.progress-bar {
+  width:0%;
+  height:100%;
+  background: linear-gradient(90deg, #007bff, #00aaff);
+  border-radius:10px;
+  transition: width 0.7s ease;
+}
+
+/* ===== OPTIONAL TIP ===== */
+.tip {
+  font-size:0.95rem;
+  color:#cce6ff;
+  opacity:0.7;
+  margin-top:1.5rem;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .question-card{padding:3rem;}
+  .logo{font-size:3rem;}
+  h1{font-size:2rem;}
+  .answer-btn{font-size:1rem;}
+}
+
+</style>
+</head>
+<body>
+
+<div class="question-card" id="questionCard">
+  <div class="logo">LIFEBOARD</div>
+  <h1 id="questionText">Question 1</h1>
+
+  <button class="answer-btn">Stay organized</button>
+  <button class="answer-btn">Improve productivity</button>
+  <button class="answer-btn">Manage time better</button>
+  <button class="answer-btn">Overcome procrastination</button>
+  <button class="answer-btn">Improve Discipline</button>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="tip">Select the option that fits you best</div>
+</div>
+
+
+
+
+<script src="login.js"></script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeBoard Login</title>
+<style>
+  /* ===== GLOBAL ===== */
+  * { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif; }
+  body {
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg,#000010,#00152f);
+    color:#fff;
+    overflow:hidden;
+  }
+  /* ===== LOGIN CARD ===== */
+  .login-card {
+    width:600px;
+    max-width:90%;
+    padding:4rem;
+    border-radius:35px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow:0 20px 60px rgba(0,0,0,0.6);
+    text-align:center;
+    transition: all 0.8s ease;
+  }
+  .login-card.fade-out { 
+    opacity:0; 
+    transform: scale(0.95) translateY(-20px); 
+    filter: blur(4px);
+  }
+
+  /* ===== LOGO ===== */
+  .logo {
+    font-size:4rem;
+    font-weight:900;
+    color:#ffffff;
+    margin-bottom:2rem;
+    letter-spacing:4px;
+    text-shadow:0 0 15px rgba(0,170,255,0.5),0 0 25px rgba(0,170,255,0.4);
+    animation:breathe 3s ease-in-out infinite;
+  }
+
+  /* ===== INPUTS ===== */
+  .login-input {
+    width:100%;
+    max-width:450px;
+    padding:1.2rem 1.5rem;
+    margin:1rem 0;
+    border:none;
+    border-radius:20px;
+    background: rgba(255,255,255,0.08);
+    color:#fff;
+    font-size:1.1rem;
+    outline:none;
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    box-shadow:0 6px 20px rgba(0,170,255,0.3);
+    transition: all 0.3s ease;
+  }
+  .login-input::placeholder { color: rgba(255,255,255,0.7); }
+  .login-input:focus { transform: scale(1.02); box-shadow:0 10px 25px rgba(0,170,255,0.5); }
+
+  /* ===== BUTTON ===== */
+  #loginBtn {
+    width:100%;
+    max-width:450px;
+    padding:1.3rem 2rem;
+    margin-top:1.5rem;
+    border:none;
+    border-radius:20px;
+    background:rgba(0,170,255,0.6);
+    color:#fff;
+    font-size:1.2rem;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 10px 30px rgba(0,170,255,0.5);
+    transition: all 0.3s ease;
+  }
+  #loginBtn:hover { transform:scale(1.05); box-shadow:0 14px 40px rgba(0,170,255,0.8); }
+
+  /* ===== POPUP ===== */
+  #login-popup {
+    position: fixed;
+    top:50%; left:50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 20, 40, 0.9);
+    color: #fff;
+    padding: 1.5rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(0,170,255,0.6);
+    font-family: "Poppins", sans-serif;
+    font-size: 1.1rem;
+    text-align: center;
+    opacity: 0;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+  }
+
+  /* ===== FINAL CINEMATIC SCREEN ===== */
+  .final-screen {
+    position: fixed;
+    top:0; left:0; width:100%; height:100%;
+    background: linear-gradient(135deg,#000010,#00152f);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+  }
+  .final-logo {
+    width:200px; height:200px;
+    border-radius:25px;
+    box-shadow:0 0 60px rgba(0,245,255,0.8);
+    animation:breathe 10s ease-in-out forwards;
+  }
+  .final-slogan {
+    font-size:1.4rem;
+    font-weight:bold;
+    color:#e6f7ff;
+    text-shadow:0 0 15px #100236;
+    margin-top:1.5rem;
+    font-family:'Courier New', monospace;
+    opacity:0;
+    animation:fadeInSlogan 1s forwards 1s;
+  }
+  
+    .switch-link {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      opacity: 0.85;
+    }
+
+    .switch-link a {
+      color: #4da3ff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .switch-link a:hover {
+      color: #82c7ff;
+      text-decoration: underline;
+    }
+  /* ===== ANIMATIONS ===== */
+  @keyframes breathe { 0%{transform:scale(1);} 50%{transform:scale(1.08);} 100%{transform:scale(1);} }
+  @keyframes fadeInSlogan { 0%{opacity:0;} 100%{opacity:1;} }
+
+  @media(max-width:768px){
+    .login-card{padding:3rem;}
+    .logo{font-size:2rem;}
+    .login-input{font-size:1rem;}
+    #loginBtn{font-size:1rem;}
+    .final-logo{width:140px;height:140px;}
+    .final-slogan{font-size:1.2rem;}
+  }
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <div class="logo">LIFEBOARD</div>
+  <input type="email" id="email" class="login-input" placeholder="Email">
+  <input type="password" id="password" class="login-input" placeholder="Password">
+  <button id="loginBtn">Login</button>
+  
+    <div class="switch-link">
+      Don't have an account? <a href="signup.html" id="loginLink">Sign up</a>
+    </div>
+</div>
+<script>
+// ================== PREMIUM LOGIN JS ==================
+function showPopup(message) {
+    const existing = document.getElementById("login-popup");
+    if (existing) existing.remove();
+    const popup = document.createElement("div");
+    popup.id = "login-popup";
+    popup.textContent = message;
+    document.body.appendChild(popup);
+    setTimeout(() => { popup.style.opacity="1"; }, 50);
+    setTimeout(() => { popup.style.opacity="0"; setTimeout(()=>popup.remove(),500); }, 3000);
+}
+
+document.getElementById("loginBtn").addEventListener("click", function() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    if(!email || !password){ showPopup("Enter email and password"); return; }
+
+    const stored = localStorage.getItem("lifeboard_user_" + email);
+    if(!stored){ showPopup("User does not exist"); return; }
+
+    const user = JSON.parse(stored);
+    if(user.password !== password){ showPopup("Incorrect password"); return; }
+
+    // Fade out login card
+    const card = document.querySelector(".login-card");
+    card.style.transition="all 0.8s ease";
+    card.style.opacity="0";
+    card.style.transform="scale(0.95) translateY(-20px)";
+
+    // Show final cinematic overlay with breathing logo
+    setTimeout(()=>{
+      document.body.innerHTML = `
+        <div class="final-screen">
+          <img src="./images/Screenshot 2025-09-26 091052.png" class="final-logo" alt="LifeBoard Logo">
+          <div class="final-slogan">Organize Your Life, Amplify Your Potential</div>
+        </div>
+      `;
+      // Personalized popup after 2s
+      setTimeout(()=> showPopup(`Welcome back, ${user.name}!`), 2000);
+      // Redirect after 10s (logo breathing)
+      setTimeout(() => { window.location.href = "firstpage.html"; }, 10000);
+    }, 900);
+});
+</script>
+
+</body>
+</html>
