@@ -1,0 +1,28 @@
+{
+  "name": "lifeboard-task-app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+
+  },
+  
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OYEthecreator/life-board.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OYEthecreator/life-board/issues"
+  },
+  "homepage": "https://github.com/OYEthecreator/life-board#readme",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1"
+  }
+}

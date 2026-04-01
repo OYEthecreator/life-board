@@ -4,12 +4,10 @@
 
 import { CONFIG } from './config.js';
 
-
 class LifeBoardApp {
-      constructor() {
+    constructor() {
         this.STORAGE_KEY = CONFIG.STORAGE_KEY;
-        this.OPENAI_API_KEY = CONFIG.OPENAI_API_KEY;
-        
+
         // Load tasks from localStorage
         this.tasks = this.loadTasksFromStorage();
         this.taskChart = null;
@@ -23,14 +21,13 @@ class LifeBoardApp {
         };
         this.init();
     }
-   hideSpinner() {
-    if (this.loading) {
-        this.loading.style.display = 'none';
-        this.loading.classList.add('hidden');
+
+    hideSpinner() {
+        if (this.loading) {
+            this.loading.style.display = 'none';
+            this.loading.classList.add('hidden');
+        }
     }
-}
-
-
 
     // STORAGE MANAGEMENT
     loadTasksFromStorage() {
@@ -57,14 +54,15 @@ class LifeBoardApp {
             console.error('Error saving tasks:', error);
         }
     }
+
     // INITIALIZATION
-    // ==========================================
     init() {
         this.setupDOMReferences();
         this.setupEventListeners();
         this.initializeComponents();
         this.loadInitialData();
     }
+
     setupDOMReferences() {
         // Core Elements
         this.sidebarToggle = document.getElementById('sidebarToggle');
@@ -72,18 +70,18 @@ class LifeBoardApp {
         this.postForm = document.getElementById('postForm');
         this.postsList = document.getElementById('posts');
         this.loading = document.getElementById('loading');
-        
+
         // Form Elements
         this.titleInput = document.getElementById('title');
         this.bodyInput = document.getElementById('body');
         this.taskCategory = document.getElementById('task-category');
         this.taskDeadline = document.getElementById('task-deadline');
         this.taskPriority = document.getElementById('task-priority');
-        
+
         // Chart Elements
         this.chartCanvas = document.getElementById('taskProgressChart');
         this.chartTimeframe = document.getElementById('chart-timeframe');
-        
+
         // Timer Elements
         this.timerDisplay = document.getElementById('timer-display');
         this.timerStart = document.getElementById('timer-start');
@@ -91,7 +89,7 @@ class LifeBoardApp {
         this.timerReset = document.getElementById('timer-reset');
         this.sessionCount = document.getElementById('session-count');
         this.totalFocusTime = document.getElementById('total-focus-time');
-        
+
         // Stats Elements
         this.greetNameEl = document.getElementById('greet-name');
         this.todayDateEl = document.getElementById('today-date');
@@ -101,7 +99,7 @@ class LifeBoardApp {
         this.valCompleted = document.getElementById('val-completed');
         this.valPending = document.getElementById('val-pending');
         this.valOverdue = document.getElementById('val-overdue');
-        
+
         // Widget Elements
         this.priorityTasksList = document.getElementById('priority-tasks-list');
         this.deadlinesList = document.getElementById('deadlines-list');
@@ -122,143 +120,146 @@ class LifeBoardApp {
         this.focusSuggestion = document.getElementById('focus-suggestion');
         this.dailyTipText = document.getElementById('daily-tip-text');
         this.todayProgress = document.getElementById('today-progress');
-        
+
         // Calendar Elements
         this.calendarGrid = document.getElementById('calendar-grid');
         this.currentMonth = document.getElementById('current-month');
         this.prevMonth = document.getElementById('prev-month');
         this.nextMonth = document.getElementById('next-month');
-        
+
         // Quick Actions
         this.quickTask = document.getElementById('quick-task');
         this.bulkComplete = document.getElementById('bulk-complete');
         this.exportTasks = document.getElementById('export-tasks');
         this.clearCompleted = document.getElementById('clear-completed');
-        
+
         // Task Filters
         this.filterBtns = document.querySelectorAll('.filter-btn');
     }
 
-    // ==========================================================
     // EVENT LISTENERS SETUP
-    // ==========================================================
     setupEventListeners() {
-        // Sidebar Toggle
         if (this.sidebarToggle && this.sidebar) {
             this.sidebarToggle.addEventListener('click', () => {
                 this.sidebar.classList.toggle('active');
             });
         }
-       // Add this to your setupEventListeners() method:
-if (this.sessionCount) {
-    this.sessionCount.style.cursor = 'pointer';
-    this.sessionCount.addEventListener('click', () => {
-        this.showSessionStats();
-    });
-}
 
-if (this.totalFocusTime) {
-    this.totalFocusTime.style.cursor = 'pointer';
-    this.totalFocusTime.addEventListener('click', () => {
-        this.showFocusTimeStats();
-    });
-}
-        // Task Form
-        if (this.postForm) {
-            this.postForm.addEventListener('submit', 
-                (e) => this.handleTaskCreate(e));
+        if (this.sessionCount) {
+            this.sessionCount.style.cursor = 'pointer';
+            this.sessionCount.addEventListener('click', () => {
+                this.showSessionStats();
+            });
         }
 
-        // Timer Controls
-        if (this.timerStart) this.timerStart.addEventListener('click', () => this.startTimer());
-        if (this.timerPause) this.timerPause.addEventListener('click', () => this.pauseTimer());
-        if (this.timerReset) this.timerReset.addEventListener('click', () => this.resetTimer());
+        if (this.totalFocusTime) {
+            this.totalFocusTime.style.cursor = 'pointer';
+            this.totalFocusTime.addEventListener('click', () => {
+                this.showFocusTimeStats();
+            });
+        }
 
-        // Timer Presets
+        if (this.postForm) {
+            this.postForm.addEventListener('submit', (e) => this.handleTaskCreate(e));
+        }
+
+        if (this.timerStart) {
+            this.timerStart.addEventListener('click', () => this.startTimer());
+        }
+        if (this.timerPause) {
+            this.timerPause.addEventListener('click', () => this.pauseTimer());
+        }
+        if (this.timerReset) {
+            this.timerReset.addEventListener('click', () => this.resetTimer());
+        }
+
         document.querySelectorAll('.preset-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                const minutes = parseInt(btn.dataset.minutes);
+                const minutes = parseInt(btn.dataset.minutes, 10);
                 this.setTimer(minutes);
             });
         });
-        // Calendar Navigation
-        if (this.prevMonth) this.prevMonth.addEventListener('click', () => this.navigateCalendar(-1));
-        if (this.nextMonth) this.nextMonth.addEventListener('click', () => this.navigateCalendar(1));
 
-        // Quick Actions
-        if (this.quickTask) this.quickTask.addEventListener('click', () => this.quickAddTask());
-        if (this.bulkComplete) this.bulkComplete.addEventListener('click', () => this.bulkCompleteTasks());
-        if (this.exportTasks) this.exportTasks.addEventListener('click', () => this.exportTasksData());
-        if (this.clearCompleted) this.clearCompleted.addEventListener('click', () => this.clearCompletedTasks());
+        if (this.prevMonth) {
+            this.prevMonth.addEventListener('click', () => this.navigateCalendar(-1));
+        }
+        if (this.nextMonth) {
+            this.nextMonth.addEventListener('click', () => this.navigateCalendar(1));
+        }
 
-        // Task Filters
+        if (this.quickTask) {
+            this.quickTask.addEventListener('click', () => this.quickAddTask());
+        }
+        if (this.bulkComplete) {
+            this.bulkComplete.addEventListener('click', () => this.bulkCompleteTasks());
+        }
+        if (this.exportTasks) {
+            this.exportTasks.addEventListener('click', () => this.exportTasksData());
+        }
+        if (this.clearCompleted) {
+            this.clearCompleted.addEventListener('click', () => this.clearCompletedTasks());
+        }
+
         this.filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => this.filterTasks(btn.dataset.filter));
+            btn.addEventListener('click', () => this.filterTasks(btn.dataset.filter, btn));
         });
 
-        // Chart Timeframe
         if (this.chartTimeframe) {
             this.chartTimeframe.addEventListener('change', () => this.refreshChartData());
         }
-    }async handleTaskCreate(e) {
-    e.preventDefault();
-    
-    if (!this.titleInput || !this.bodyInput) return;
-
-    const title = this.titleInput.value.trim();
-    const description = this.bodyInput.value.trim();
-
-    if (!title) {
-        this.showNotification('Please enter a task title', 'error');
-        return;
     }
 
-    try {
-        this.showLoading(true);
-        
-        // Get AI suggestions
-        this.showNotification('Creating new Task');
-        const aiAnalysis = await this.analyzeTaskWithAI(title, description);
-        
-        // ✅ FIXED: Use MANUAL priority from dropdown OR AI suggestion
-        const newTask = {
-            id: Date.now(),
-            title: title,
-            description: description,
-            category: this.taskCategory ? this.taskCategory.value : aiAnalysis.category || 'personal',
-            // ✅ THIS IS THE KEY FIX: Use dropdown value if user selected it
-            priority: this.taskPriority ? this.taskPriority.value : aiAnalysis.priority || 'medium',
-            dueDate: this.taskDeadline && this.taskDeadline.value ? 
-                     new Date(this.taskDeadline.value) : 
-                     this.calculateDueDate(aiAnalysis.suggestedDeadline),
-            completed: false,
-            createdAt: new Date(),
-            timeEstimate: aiAnalysis.estimatedMinutes || 30
-        };
+    async handleTaskCreate(e) {
+        e.preventDefault();
 
-        // Add to local array and save
-        this.tasks.unshift(newTask);
-        this.saveTasksToStorage();
-        
-        this.renderTasks();
-        this.updateAllWidgets();
-        this.postForm.reset();
-        
-        // ✅ SHOW THE ACTUAL PRIORITY THAT WAS SAVED
-        this.showNotification(`Task created! Priority: ${newTask.priority}`, 'success');
-        this.addActivity(`Created task: "${newTask.title}"`);
-        
-    } catch (error) {
-        console.error('Error creating task:', error);
-        this.showNotification('Failed to create task', 'error');
-    } finally {
-        this.showLoading(false);
+        if (!this.titleInput || !this.bodyInput) return;
+
+        const title = this.titleInput.value.trim();
+        const description = this.bodyInput.value.trim();
+
+        if (!title) {
+            this.showNotification('Please enter a task title', 'error');
+            return;
+        }
+
+        try {
+            this.showLoading(true);
+
+            this.showNotification('Creating new Task');
+            const aiAnalysis = await this.analyzeTaskWithAI(title, description);
+
+            const newTask = {
+                id: Date.now(),
+                title: title,
+                description: description,
+                category: this.taskCategory ? this.taskCategory.value : aiAnalysis.category || 'personal',
+                priority: this.taskPriority ? this.taskPriority.value : aiAnalysis.priority || 'medium',
+                dueDate: this.taskDeadline && this.taskDeadline.value
+                    ? new Date(this.taskDeadline.value)
+                    : this.calculateDueDate(aiAnalysis.suggestedDeadline),
+                completed: false,
+                createdAt: new Date(),
+                timeEstimate: aiAnalysis.estimatedMinutes || 30
+            };
+
+            this.tasks.unshift(newTask);
+            this.saveTasksToStorage();
+
+            this.renderTasks();
+            this.updateAllWidgets();
+            this.postForm.reset();
+
+            this.showNotification(`Task created! Priority: ${newTask.priority}`, 'success');
+            this.addActivity(`Created task: "${newTask.title}"`);
+        } catch (error) {
+            console.error('Error creating task:', error);
+            this.showNotification('Failed to create task', 'error');
+        } finally {
+            this.showLoading(false);
+        }
     }
-}
 
-    // ==========================================================
     // COMPONENT INITIALIZATION
-    // ==========================================================
     initializeComponents() {
         this.setupGreeting();
         this.initializeChart();
@@ -269,29 +270,36 @@ if (this.totalFocusTime) {
 
     setupGreeting() {
         const currentEmail = localStorage.getItem('current_user_email');
-        let firstName = "User";
+        let firstName = 'User';
 
         if (currentEmail) {
-            const userData = JSON.parse(localStorage.getItem("lifeboard_user_" + currentEmail));
-            if (userData && userData.name) {
-                firstName = userData.name.split(" ")[0];
+            const rawUserData = localStorage.getItem('lifeboard_user_' + currentEmail);
+            if (rawUserData) {
+                const userData = JSON.parse(rawUserData);
+                if (userData && userData.name) {
+                    firstName = userData.name.split(' ')[0];
+                }
             }
         }
 
         const now = new Date();
         const hour = now.getHours();
 
-        const greeting = hour >= 5 && hour < 12 ? 'Good Morning' :
-                        hour >= 12 && hour < 17 ? 'Good Afternoon' :
-                        hour >= 17 && hour < 23 ? 'Good Evening' : 'Hello';
+        const greeting = hour >= 5 && hour < 12
+            ? 'Good Morning'
+            : hour >= 12 && hour < 17
+                ? 'Good Afternoon'
+                : hour >= 17 && hour < 23
+                    ? 'Good Evening'
+                    : 'Hello';
 
         if (this.greetNameEl) {
             this.greetNameEl.textContent = `${greeting}, ${firstName} 👋`;
         }
 
-        const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        const MONTHS = ["January", "February", "March", "April", "May", "June", "July", 
-                       "August", "September", "October", "November", "December"];
+        const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+            'August', 'September', 'October', 'November', 'December'];
 
         if (this.todayDateEl) {
             this.todayDateEl.textContent = `${DAYS[now.getDay()]} • ${MONTHS[now.getMonth()]} ${now.getDate()}`;
@@ -299,62 +307,62 @@ if (this.totalFocusTime) {
     }
 
     initializeChart() {
-        if (!this.chartCanvas) return;
+        if (!this.chartCanvas || typeof Chart === 'undefined') return;
 
         const ctx = this.chartCanvas.getContext('2d');
-        
+
         this.taskChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: [],
                 datasets: [
-                    { 
-                        label: 'Total',     
-                        data: [], 
-                        borderColor: '#0a0572', 
-                        backgroundColor: 'rgba(10,5,114,0.1)', 
-                        fill: true, 
-                        tension: 0.3 
+                    {
+                        label: 'Total',
+                        data: [],
+                        borderColor: '#0a0572',
+                        backgroundColor: 'rgba(10,5,114,0.1)',
+                        fill: true,
+                        tension: 0.3
                     },
-                    { 
-                        label: 'Completed', 
-                        data: [], 
-                        borderColor: '#0f9d58', 
-                        backgroundColor: 'rgba(15,157,88,0.1)', 
-                        fill: true, 
-                        tension: 0.3 
+                    {
+                        label: 'Completed',
+                        data: [],
+                        borderColor: '#0f9d58',
+                        backgroundColor: 'rgba(15,157,88,0.1)',
+                        fill: true,
+                        tension: 0.3
                     },
-                    { 
-                        label: 'Pending',   
-                        data: [], 
-                        borderColor: '#f6c74b', 
-                        backgroundColor: 'rgba(246,199,75,0.1)', 
-                        fill: true, 
-                        tension: 0.3 
+                    {
+                        label: 'Pending',
+                        data: [],
+                        borderColor: '#f6c74b',
+                        backgroundColor: 'rgba(246,199,75,0.1)',
+                        fill: true,
+                        tension: 0.3
                     },
-                    { 
-                        label: 'Overdue',   
-                        data: [], 
-                        borderColor: '#e64a19', 
-                        backgroundColor: 'rgba(230,74,25,0.1)', 
-                        fill: true, 
-                        tension: 0.3 
+                    {
+                        label: 'Overdue',
+                        data: [],
+                        borderColor: '#e64a19',
+                        backgroundColor: 'rgba(230,74,25,0.1)',
+                        fill: true,
+                        tension: 0.3
                     },
-                    { 
-                        label: 'Today',     
-                        data: [], 
-                        borderColor: '#6a1b9a', 
-                        backgroundColor: 'rgba(106,27,154,0.1)', 
-                        fill: true, 
-                        tension: 0.3 
-                    },
+                    {
+                        label: 'Today',
+                        data: [],
+                        borderColor: '#6a1b9a',
+                        backgroundColor: 'rgba(106,27,154,0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { 
+                    legend: {
                         position: 'bottom',
                         labels: {
                             color: 'rgba(255, 255, 255, 0.9)',
@@ -364,8 +372,8 @@ if (this.totalFocusTime) {
                             }
                         }
                     },
-                    tooltip: { 
-                        mode: 'index', 
+                    tooltip: {
+                        mode: 'index',
                         intersect: false,
                         backgroundColor: 'rgba(15, 15, 35, 0.95)',
                         titleColor: 'rgba(255, 255, 255, 0.9)',
@@ -385,14 +393,14 @@ if (this.totalFocusTime) {
                     }
                 },
                 scales: {
-                    x: { 
-                        title: { 
-                            display: true, 
+                    x: {
+                        title: {
+                            display: true,
                             text: 'Time',
                             color: 'rgba(255, 255, 255, 0.7)'
-                        }, 
-                        ticks: { 
-                            maxRotation: 45, 
+                        },
+                        ticks: {
+                            maxRotation: 45,
                             autoSkip: true,
                             color: 'rgba(255, 255, 255, 0.7)'
                         },
@@ -400,10 +408,10 @@ if (this.totalFocusTime) {
                             color: 'rgba(255, 255, 255, 0.1)'
                         }
                     },
-                    y: { 
-                        beginAtZero: true, 
-                        title: { 
-                            display: true, 
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
                             text: 'Tasks',
                             color: 'rgba(255, 255, 255, 0.7)'
                         },
@@ -427,38 +435,25 @@ if (this.totalFocusTime) {
         });
     }
 
-    // ==========================================================
-    // AI POWERED FEATURES
-    // ==========================================================
+    // AI POWERED FEATURES - NOW CALLING YOUR BACKEND
     async analyzeTaskWithAI(taskTitle, taskDescription) {
         try {
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            const response = await fetch('/api/analyze-task', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.OPENAI_API_KEY}`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    model: "gpt-3.5-turbo",
-                    messages: [{
-                        role: "user", 
-                        content: `Analyze this task: "${taskTitle} - ${taskDescription}". 
-                        Respond with ONLY JSON: {
-                            "category": "work|study|personal|health",
-                            "priority": "low|medium|high", 
-                            "estimatedMinutes": number,
-                            "suggestedDeadline": "today|tomorrow|this_week|next_week"
-                        }`
-                    }],
-                    max_tokens: 150
+                    taskTitle,
+                    taskDescription
                 })
             });
-            
-            const data = await response.json();
-            const aiResponse = data.choices[0].message.content;
-            
-            // Parse JSON response
-            return JSON.parse(aiResponse);
+
+            if (!response.ok) {
+                throw new Error('Failed to analyze task');
+            }
+
+            return await response.json();
         } catch (error) {
             console.error('AI analysis failed:', error);
             return {
@@ -473,68 +468,60 @@ if (this.totalFocusTime) {
     async getAIFocusSuggestion() {
         try {
             const pendingTasks = this.tasks.filter(task => !task.completed);
-            if (pendingTasks.length === 0) return "No pending tasks! Create some tasks to get suggestions.";
-            
-            const taskList = pendingTasks.slice(0, 5).map(t => t.title).join(', ');
-            
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            if (pendingTasks.length === 0) {
+                return 'No pending tasks! Create some tasks to get suggestions.';
+            }
+
+            const taskList = pendingTasks.slice(0, 5).map(t => t.title);
+
+            const response = await fetch('/api/focus-suggestion', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.OPENAI_API_KEY}`
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    model: "gpt-3.5-turbo",
-                    messages: [{
-                        role: "user",
-                        content: `Suggest which task to focus on first from: ${taskList}. 
-                        Give a short, motivational suggestion (max 15 words).`
-                    }],
-                    max_tokens: 50
-                })
+                body: JSON.stringify({ taskList })
             });
-            
+
+            if (!response.ok) {
+                throw new Error('Failed to get focus suggestion');
+            }
+
             const data = await response.json();
-            return data.choices[0].message.content;
+            return data.suggestion;
         } catch (error) {
-            return "Focus on your highest priority task first!";
+            console.error('Focus suggestion failed:', error);
+            return 'Focus on your highest priority task first!';
         }
     }
 
     async getAIProductivityTip() {
         try {
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            const response = await fetch('/api/productivity-tip', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.OPENAI_API_KEY}`
-                },
-                body: JSON.stringify({
-                    model: "gpt-3.5-turbo",
-                    messages: [{
-                        role: "user",
-                        content: "Give one short, practical productivity tip for task management (max 12 words)"
-                    }],
-                    max_tokens: 40
-                })
+                    'Content-Type': 'application/json'
+                }
             });
-            
+
+            if (!response.ok) {
+                throw new Error('Failed to get productivity tip');
+            }
+
             const data = await response.json();
-            return data.choices[0].message.content;
+            return data.tip;
         } catch (error) {
-            return "Break big tasks into small, actionable steps!";
+            console.error('Productivity tip failed:', error);
+            return 'Break big tasks into small, actionable steps!';
         }
     }
 
     async setupAIFeatures() {
         try {
-            // Get AI productivity tip
             const aiTip = await this.getAIProductivityTip();
             if (this.dailyTipText) {
                 this.dailyTipText.textContent = aiTip;
             }
-            
-            // Get AI focus suggestion
+
             const focusSuggestion = await this.getAIFocusSuggestion();
             if (this.focusSuggestion) {
                 this.focusSuggestion.textContent = focusSuggestion;
@@ -546,24 +533,32 @@ if (this.totalFocusTime) {
 
     calculateDueDate(suggestion) {
         const today = new Date();
-        switch(suggestion) {
-            case 'today': return today;
-            case 'tomorrow': return new Date(today.setDate(today.getDate() + 1));
-            case 'this_week': return new Date(today.setDate(today.getDate() + 3));
-            case 'next_week': return new Date(today.setDate(today.getDate() + 7));
-            default: return new Date(today.setDate(today.getDate() + 7));
+        const result = new Date(today);
+
+        switch (suggestion) {
+            case 'today':
+                return result;
+            case 'tomorrow':
+                result.setDate(result.getDate() + 1);
+                return result;
+            case 'this_week':
+                result.setDate(result.getDate() + 3);
+                return result;
+            case 'next_week':
+                result.setDate(result.getDate() + 7);
+                return result;
+            default:
+                result.setDate(result.getDate() + 7);
+                return result;
         }
     }
 
-    // ==========================================================
     // TASK MANAGEMENT
-    // ==========================================================
     loadInitialData() {
         this.renderTasks();
         this.refreshChartData();
         this.updateAllWidgets();
     }
-
 
     async updateTask(taskId, updates) {
         try {
@@ -590,22 +585,19 @@ if (this.totalFocusTime) {
             const taskToDelete = this.tasks.find(task => task.id === taskId);
             this.tasks = this.tasks.filter(task => task.id !== taskId);
             this.saveTasksToStorage();
-            
+
             this.renderTasks();
             this.updateAllWidgets();
-            
+
             this.showNotification('Task deleted successfully!', 'success');
             this.addActivity(`Deleted task: "${taskToDelete?.title || 'Unknown task'}"`);
-            
         } catch (error) {
             console.error('Error deleting task:', error);
             this.showNotification('Failed to delete task', 'error');
         }
     }
 
-    // ==========================================================
     // TASK RENDERING
-    // ==========================================================
     renderTasks(filter = 'all') {
         if (!this.postsList) return;
 
@@ -639,18 +631,19 @@ if (this.totalFocusTime) {
         const taskEl = document.createElement('li');
         taskEl.className = `post-item priority-${task.priority} ${task.completed ? 'completed' : ''}`;
         taskEl.setAttribute('data-task-id', task.id);
-        
+
         const dueDate = new Date(task.dueDate);
-        const isOverdue = !task.completed && dueDate < new Date();
-        const timeUntilDue = dueDate - new Date();
+        const now = new Date();
+        const isOverdue = !task.completed && dueDate < now;
+        const timeUntilDue = dueDate - now;
         const daysUntilDue = Math.ceil(timeUntilDue / (1000 * 60 * 60 * 24));
-        
+
         const priorityIcons = {
             low: '🟢',
-            medium: '🟡', 
+            medium: '🟡',
             high: '🔴'
         };
-        
+
         const categoryIcons = {
             work: '💼',
             study: '📚',
@@ -669,7 +662,7 @@ if (this.totalFocusTime) {
                         <span class="task-priority ${task.priority}">${priorityIcons[task.priority] || '⚪'} ${task.priority}</span>
                         <span class="task-category">${categoryIcons[task.category] || '📦'} ${task.category}</span>
                         <span class="task-due ${isOverdue ? 'overdue' : ''} ${daysUntilDue < 3 ? 'urgent' : ''}">
-                            📅 ${dueDate.toLocaleDateString()} 
+                            📅 ${dueDate.toLocaleDateString()}
                             ${isOverdue ? '(Overdue)' : daysUntilDue < 3 ? `(${daysUntilDue}d left)` : ''}
                         </span>
                     </div>
@@ -682,9 +675,9 @@ if (this.totalFocusTime) {
                     <button class="delete" title="Delete task">🗑️ Delete</button>
                 </div>
             </div>
-            <p class="task-description">${this.escapeHtml(task.description)}</p>
+            <p class="task-description">${this.escapeHtml(task.description || '')}</p>
             <div class="task-footer">
-                <span class="task-time">⏱️ ${task.timeEstimate} min estimate</span>
+                <span class="task-time">⏱️ ${task.timeEstimate || 30} min estimate</span>
                 <span class="task-created">Created: ${new Date(task.createdAt).toLocaleDateString()}</span>
             </div>
         `;
@@ -724,13 +717,13 @@ if (this.totalFocusTime) {
         const task = this.tasks.find(t => t.id === taskId);
         if (task) {
             const newCompletedState = !task.completed;
-            this.updateTask(taskId, { 
+            this.updateTask(taskId, {
                 completed: newCompletedState,
                 description: task.description
             });
-            
+
             this.addActivity(`${newCompletedState ? 'Completed' : 'Marked pending'}: "${task.title}"`);
-            
+
             const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
             if (taskElement) {
                 taskElement.classList.toggle('completed', newCompletedState);
@@ -741,10 +734,10 @@ if (this.totalFocusTime) {
     editTask(task) {
         const newTitle = prompt('Edit task title:', task.title);
         if (newTitle === null) return;
-        
-        const newDescription = prompt('Edit task description:', task.description);
+
+        const newDescription = prompt('Edit task description:', task.description || '');
         if (newDescription === null) return;
-        
+
         if (newTitle.trim() && newDescription.trim()) {
             this.updateTask(task.id, {
                 title: newTitle.trim(),
@@ -756,22 +749,20 @@ if (this.totalFocusTime) {
         }
     }
 
-    // ==========================================================
     // CHART DATA & VISUALIZATION
-    // ==========================================================
     refreshChartData() {
         if (!this.taskChart) return;
 
         const timeLabels = this.getTimeLabels();
         const chartData = this.generateRealChartData();
-        
+
         this.taskChart.data.labels = timeLabels;
         this.taskChart.data.datasets[0].data = chartData.total;
         this.taskChart.data.datasets[1].data = chartData.completed;
         this.taskChart.data.datasets[2].data = chartData.pending;
         this.taskChart.data.datasets[3].data = chartData.overdue;
         this.taskChart.data.datasets[4].data = chartData.today;
-        
+
         this.taskChart.update('active');
     }
 
@@ -787,17 +778,17 @@ if (this.totalFocusTime) {
 
         for (let i = 0; i < 12; i++) {
             const timePoint = new Date(now.getTime() - i * 2 * 60 * 60 * 1000);
-            
-            const tasksAtTime = this.tasks.filter(task => 
+
+            const tasksAtTime = this.tasks.filter(task =>
                 new Date(task.createdAt) <= timePoint
             );
 
             const completedAtTime = tasksAtTime.filter(task => task.completed).length;
             const pendingAtTime = tasksAtTime.filter(task => !task.completed).length;
-            const overdueAtTime = tasksAtTime.filter(task => 
+            const overdueAtTime = tasksAtTime.filter(task =>
                 !task.completed && new Date(task.dueDate) < timePoint
             ).length;
-            const todayAtTime = tasksAtTime.filter(task => 
+            const todayAtTime = tasksAtTime.filter(task =>
                 new Date(task.dueDate).toDateString() === todayStr
             ).length;
 
@@ -820,18 +811,16 @@ if (this.totalFocusTime) {
     getTimeLabels() {
         const labels = [];
         const now = new Date();
-        
+
         for (let i = 11; i >= 0; i--) {
             const time = new Date(now.getTime() - i * 2 * 60 * 60 * 1000);
             labels.push(time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
         }
-        
+
         return labels;
     }
 
-    // ==========================================================
     // CALENDAR FUNCTIONALITY
-    // ==========================================================
     initializeCalendar() {
         this.currentCalendarDate = new Date();
         this.renderCalendar();
@@ -842,11 +831,11 @@ if (this.totalFocusTime) {
 
         const year = this.currentCalendarDate.getFullYear();
         const month = this.currentCalendarDate.getMonth();
-        
+
         if (this.currentMonth) {
-            this.currentMonth.textContent = this.currentCalendarDate.toLocaleDateString('en-US', { 
-                month: 'long', 
-                year: 'numeric' 
+            this.currentMonth.textContent = this.currentCalendarDate.toLocaleDateString('en-US', {
+                month: 'long',
+                year: 'numeric'
             });
         }
 
@@ -876,15 +865,15 @@ if (this.totalFocusTime) {
             dayEl.textContent = day;
 
             const currentDate = new Date(year, month, day);
-            
+
             if (currentDate.toDateString() === today.toDateString()) {
                 dayEl.classList.add('today');
             }
 
-            const hasRealTasks = this.tasks.some(task => 
+            const hasRealTasks = this.tasks.some(task =>
                 new Date(task.dueDate).toDateString() === currentDate.toDateString()
             );
-            
+
             if (hasRealTasks) {
                 dayEl.classList.add('has-tasks');
             }
@@ -915,139 +904,140 @@ if (this.totalFocusTime) {
         }
     }
 
-// ==========================================================
-// TIMER FUNCTIONALITY
-// ==========================================================
-startTimer() {
-    if (this.timer.running) return;
+    // TIMER FUNCTIONALITY
+    startTimer() {
+        if (this.timer.running) return;
 
-    this.timer.running = true;
-    this.timer.interval = setInterval(() => {
-        this.timer.seconds--;
-        
-        if (this.timer.seconds < 0) {
-            this.timer.minutes--;
-            this.timer.seconds = 59;
+        this.timer.running = true;
+        this.timer.interval = setInterval(() => {
+            this.timer.seconds--;
+
+            if (this.timer.seconds < 0) {
+                this.timer.minutes--;
+                this.timer.seconds = 59;
+            }
+
+            if (this.timer.minutes < 0) {
+                this.timerComplete();
+                return;
+            }
+
+            this.updateTimerDisplay();
+        }, 1000);
+
+        if (this.timerStart) {
+            this.timerStart.textContent = '⏸️ Pause';
         }
-        
-        if (this.timer.minutes < 0) {
-            this.timerComplete();
-            return;
+        this.addActivity('Started focus timer');
+    }
+
+    pauseTimer() {
+        if (!this.timer.running) return;
+
+        this.timer.running = false;
+        clearInterval(this.timer.interval);
+        if (this.timerStart) {
+            this.timerStart.textContent = '▶️ Start';
         }
-        
+        this.addActivity('Paused focus timer');
+    }
+
+    resetTimer() {
+        this.timer.running = false;
+        clearInterval(this.timer.interval);
+        this.setTimer(25);
+        if (this.timerStart) {
+            this.timerStart.textContent = '▶️ Start';
+        }
+        this.addActivity('Reset focus timer');
+    }
+
+    setTimer(minutes) {
+        this.timer.minutes = minutes;
+        this.timer.seconds = 0;
         this.updateTimerDisplay();
-    }, 1000);
-
-    this.timerStart.textContent = '⏸️ Pause';
-    this.addActivity('Started focus timer');
-}
-
-pauseTimer() {
-    if (!this.timer.running) return;
-
-    this.timer.running = false;
-    clearInterval(this.timer.interval);
-    this.timerStart.textContent = '▶️ Start';
-    this.addActivity('Paused focus timer');
-}
-
-resetTimer() {
-    this.timer.running = false;
-    clearInterval(this.timer.interval);
-    this.setTimer(25);
-    this.timerStart.textContent = '▶️ Start';
-    this.addActivity('Reset focus timer');
-}
-
-setTimer(minutes) {
-    this.timer.minutes = minutes;
-    this.timer.seconds = 0;
-    this.updateTimerDisplay();
-}
-
-timerComplete() {
-    this.timer.running = false;
-    clearInterval(this.timer.interval);
-    
-    this.timer.sessions++;
-    this.timer.totalFocusTime += 25;
-    
-    if (this.sessionCount) {
-        this.sessionCount.textContent = this.timer.sessions;
-    }
-    if (this.totalFocusTime) {
-        const hours = Math.floor(this.timer.totalFocusTime / 60);
-        const minutes = this.timer.totalFocusTime % 60;
-        this.totalFocusTime.textContent = `${hours}h ${minutes}m`;
     }
 
-    this.showNotification('Focus session completed! 🎉', 'success');
-    this.addActivity('Completed a focus session');
-    
-    setTimeout(() => {
-        this.setTimer(5);
-        this.startTimer();
-    }, 2000);
-}
+    timerComplete() {
+        this.timer.running = false;
+        clearInterval(this.timer.interval);
 
-updateTimerDisplay() {
-    if (this.timerDisplay) {
-        const mins = String(this.timer.minutes).padStart(2, '0');
-        const secs = String(this.timer.seconds).padStart(2, '0');
-        this.timerDisplay.textContent = `${mins}:${secs}`;
+        this.timer.sessions++;
+        this.timer.totalFocusTime += 25;
+
+        if (this.sessionCount) {
+            this.sessionCount.textContent = this.timer.sessions;
+        }
+        if (this.totalFocusTime) {
+            const hours = Math.floor(this.timer.totalFocusTime / 60);
+            const minutes = this.timer.totalFocusTime % 60;
+            this.totalFocusTime.textContent = `${hours}h ${minutes}m`;
+        }
+
+        this.showNotification('Focus session completed! 🎉', 'success');
+        this.addActivity('Completed a focus session');
+
+        setTimeout(() => {
+            this.setTimer(5);
+            this.startTimer();
+        }, 2000);
     }
-}
 
-// ==========================================================
-// TIMER STATS METHODS
-// ==========================================================
-showSessionStats() {
-    const stats = `
+    updateTimerDisplay() {
+        if (this.timerDisplay) {
+            const mins = String(this.timer.minutes).padStart(2, '0');
+            const secs = String(this.timer.seconds).padStart(2, '0');
+            this.timerDisplay.textContent = `${mins}:${secs}`;
+        }
+    }
+
+    // TIMER STATS METHODS
+    showSessionStats() {
+        const stats = `
 🎯 Session Stats:
 • Total Sessions: ${this.timer.sessions}
 • Today's Goal: 4 sessions
 • Current Streak: ${this.getCurrentStreak()} days
 • Best Streak: ${this.getBestStreak()} days
-    `;
-    this.showNotification(stats, 'info');
-}
+        `;
+        this.showNotification(stats, 'info');
+    }
 
-showFocusTimeStats() {
-    const hours = Math.floor(this.timer.totalFocusTime / 60);
-    const minutes = this.timer.totalFocusTime % 60;
-    
-    const stats = `
+    showFocusTimeStats() {
+        const hours = Math.floor(this.timer.totalFocusTime / 60);
+        const minutes = this.timer.totalFocusTime % 60;
+
+        const stats = `
 ⏱️ Focus Time Stats:
 • Total: ${hours}h ${minutes}m
 • Daily Average: ${this.getDailyAverage()}m
 • Productivity: ${this.calculateProductivityScore()}%
 • Tasks Completed: ${this.tasks.filter(task => task.completed).length}
-    `;
-    this.showNotification(stats, 'info');
-}
+        `;
+        this.showNotification(stats, 'info');
+    }
 
-// Helper methods
-getCurrentStreak() {
-    return this.timer.sessions > 0 ? 1 : 0;
-}
+    getCurrentStreak() {
+        return this.timer.sessions > 0 ? 1 : 0;
+    }
 
-getBestStreak() {
-    return Math.max(1, this.timer.sessions);
-}
+    getBestStreak() {
+        return Math.max(1, this.timer.sessions);
+    }
 
-getDailyAverage() {
-    return this.timer.sessions > 0 ? 
-        Math.round(this.timer.totalFocusTime / this.timer.sessions) : 0;
-}
+    getDailyAverage() {
+        return this.timer.sessions > 0
+            ? Math.round(this.timer.totalFocusTime / this.timer.sessions)
+            : 0;
+    }
 
-calculateProductivityScore() {
-    const completed = this.tasks.filter(task => task.completed).length;
-    const total = this.tasks.length;
-    return total > 0 ? Math.round((completed / total) * 100) : 0;
-}
-    // ==========================================================
+    calculateProductivityScore() {
+        const completed = this.tasks.filter(task => task.completed).length;
+        const total = this.tasks.length;
+        return total > 0 ? Math.round((completed / total) * 100) : 0;
+    }
+
     // QUICK ACTIONS
-    // ==========================================================
     quickAddTask() {
         const quickTasks = [
             'Review daily goals',
@@ -1056,20 +1046,20 @@ calculateProductivityScore() {
             'Quick break',
             'Drink water'
         ];
-        
+
         const randomTask = quickTasks[Math.floor(Math.random() * quickTasks.length)];
-        
+
         if (this.titleInput) {
             this.titleInput.value = randomTask;
             this.titleInput.focus();
         }
-        
+
         this.showNotification('Quick task added - fill in details!', 'info');
     }
 
-    bulkCompleteTasks() {
+    async bulkCompleteTasks() {
         const pendingTasks = this.tasks.filter(task => !task.completed);
-        
+
         if (pendingTasks.length === 0) {
             this.showNotification('No pending tasks to complete!', 'info');
             return;
@@ -1077,8 +1067,13 @@ calculateProductivityScore() {
 
         if (confirm(`Complete all ${pendingTasks.length} pending tasks?`)) {
             pendingTasks.forEach(task => {
-                this.updateTask(task.id, { completed: true });
+                task.completed = true;
             });
+
+            this.saveTasksToStorage();
+            this.renderTasks();
+            this.updateAllWidgets();
+
             this.showNotification(`Completed ${pendingTasks.length} tasks!`, 'success');
             this.addActivity(`Bulk completed ${pendingTasks.length} tasks`);
         }
@@ -1094,43 +1089,45 @@ calculateProductivityScore() {
 
         const dataStr = JSON.stringify(exportData, null, 2);
         const dataBlob = new Blob([dataStr], { type: 'application/json' });
-        
+
         const link = document.createElement('a');
         link.href = URL.createObjectURL(dataBlob);
         link.download = `tasks-export-${new Date().toISOString().split('T')[0]}.json`;
         link.click();
-        
+
         this.showNotification('Tasks exported successfully!', 'success');
         this.addActivity('Exported tasks data');
     }
 
     clearCompletedTasks() {
         const completedTasks = this.tasks.filter(task => task.completed);
-        
+
         if (completedTasks.length === 0) {
             this.showNotification('No completed tasks to clear!', 'info');
             return;
         }
 
         if (confirm(`Clear all ${completedTasks.length} completed tasks?`)) {
-            completedTasks.forEach(task => {
-                this.deleteTask(task.id);
-            });
+            this.tasks = this.tasks.filter(task => !task.completed);
+            this.saveTasksToStorage();
+            this.renderTasks();
+            this.updateAllWidgets();
             this.addActivity(`Cleared ${completedTasks.length} completed tasks`);
+            this.showNotification(`Cleared ${completedTasks.length} completed tasks`, 'success');
         }
     }
 
-    filterTasks(filter) {
+    filterTasks(filter, clickedBtn) {
         this.filterBtns.forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+        if (clickedBtn) {
+            clickedBtn.classList.add('active');
+        }
 
         this.renderTasks(filter);
         this.showNotification(`Showing ${filter} tasks`, 'info');
     }
 
-    // ==========================================================
     // WIDGET UPDATES & REAL-TIME DATA
-    // ==========================================================
     updateAllWidgets() {
         this.updateProgressStats();
         this.updatePriorityTasks();
@@ -1151,16 +1148,16 @@ calculateProductivityScore() {
             const taskDate = new Date(task.dueDate);
             return taskDate.toDateString() === today.toDateString();
         });
-        const overdue = this.tasks.filter(task => 
+        const overdue = this.tasks.filter(task =>
             !task.completed && new Date(task.dueDate) < today
         ).length;
 
         if (this.overallProgress) {
             const progressPercent = total > 0 ? (completed / total) * 100 : 0;
-            
+
             this.overallProgress.style.transition = 'width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
             this.overallProgress.style.width = `${progressPercent}%`;
-            
+
             if (progressPercent >= 75) {
                 this.overallProgress.style.background = 'linear-gradient(135deg, #10B981, #059669)';
             } else if (progressPercent >= 50) {
@@ -1182,7 +1179,7 @@ calculateProductivityScore() {
     animateCount(element, newValue) {
         element.style.transform = 'scale(1.1)';
         element.style.color = '#8B5CF6';
-        
+
         setTimeout(() => {
             element.textContent = newValue;
             element.style.transform = 'scale(1)';
@@ -1193,7 +1190,7 @@ calculateProductivityScore() {
     updatePriorityTasks() {
         if (!this.priorityTasksList) return;
 
-        const highPriorityTasks = this.tasks.filter(task => 
+        const highPriorityTasks = this.tasks.filter(task =>
             task.priority === 'high' && !task.completed
         ).slice(0, 5);
 
@@ -1208,7 +1205,7 @@ calculateProductivityScore() {
 
         this.priorityTasksList.innerHTML = highPriorityTasks.map(task => `
             <li class="priority-task">
-                <span class="task-title">${task.title}</span>
+                <span class="task-title">${this.escapeHtml(task.title)}</span>
                 <span class="task-due">${new Date(task.dueDate).toLocaleDateString()}</span>
             </li>
         `).join('');
@@ -1236,7 +1233,7 @@ calculateProductivityScore() {
             const today = new Date();
             const diffTime = dueDate - today;
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            
+
             let urgency = '';
             if (diffDays < 0) urgency = 'overdue';
             else if (diffDays === 0) urgency = 'today';
@@ -1244,7 +1241,7 @@ calculateProductivityScore() {
 
             return `
                 <li class="deadline-task ${urgency}">
-                    <span class="task-title">${task.title}</span>
+                    <span class="task-title">${this.escapeHtml(task.title)}</span>
                     <span class="deadline-countdown">
                         ${diffDays < 0 ? 'Overdue' : diffDays === 0 ? 'Today' : `${diffDays}d`}
                     </span>
@@ -1254,14 +1251,14 @@ calculateProductivityScore() {
     }
 
     updateTaskStatistics() {
-        const completedThisWeek = this.tasks.filter(task => 
+        const completedThisWeek = this.tasks.filter(task =>
             task.completed && this.isThisWeek(new Date(task.createdAt))
         ).length;
 
         const total = this.tasks.length;
         const completed = this.tasks.filter(task => task.completed).length;
         const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
-        
+
         const avgCompletionTime = this.calculateAverageCompletionTime();
 
         if (this.weeklyCompleted) this.weeklyCompleted.textContent = completedThisWeek;
@@ -1272,10 +1269,10 @@ calculateProductivityScore() {
     updateProductivityScore() {
         const total = this.tasks.length;
         const completed = this.tasks.filter(task => task.completed).length;
-        const onTimeTasks = this.tasks.filter(task => 
+        const onTimeTasks = this.tasks.filter(task =>
             task.completed && new Date(task.dueDate) >= new Date()
         ).length;
-        
+
         let score = 0;
         if (total > 0) {
             const completionScore = (completed / total) * 50;
@@ -1308,9 +1305,7 @@ calculateProductivityScore() {
         }
     }
 
-    // ==========================================================
     // WEATHER & EXTERNAL INTEGRATIONS
-    // ==========================================================
     async setupWeather() {
         try {
             const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=6.5244&longitude=3.3792&current_weather=true');
@@ -1319,11 +1314,10 @@ calculateProductivityScore() {
             if (this.weatherLocation) this.weatherLocation.textContent = 'Lagos, NG';
             if (this.weatherTemp) this.weatherTemp.textContent = `${data.current_weather.temperature}°C`;
             if (this.weatherDesc) this.weatherDesc.textContent = this.getWeatherDescription(data.current_weather.weathercode);
-            
-            if (this.focusSuggestion) {
+
+            if (this.focusSuggestion && !this.tasks.length) {
                 this.focusSuggestion.textContent = this.getFocusSuggestion(data.current_weather.temperature);
             }
-
         } catch (error) {
             console.error('Error fetching weather:', error);
             if (this.weatherLocation) this.weatherLocation.textContent = 'Lagos, NG';
@@ -1332,16 +1326,14 @@ calculateProductivityScore() {
         }
     }
 
-    // ==========================================================  
     // UTILITY FUNCTIONS
-    // ==========================================================
     escapeHtml(unsafe) {
-        return unsafe
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+        return String(unsafe || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
     }
 
     getTodayTasks() {
@@ -1353,9 +1345,15 @@ calculateProductivityScore() {
     }
 
     isThisWeek(date) {
-        const today = new Date();
-        const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
-        const endOfWeek = new Date(today.setDate(today.getDate() + 6));
+        const now = new Date();
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - now.getDay());
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        endOfWeek.setHours(23, 59, 59, 999);
+
         return date >= startOfWeek && date <= endOfWeek;
     }
 
@@ -1373,19 +1371,19 @@ calculateProductivityScore() {
     calculateCurrentStreak() {
         let streak = 0;
         const today = new Date();
-        
+
         for (let i = 0; i < 7; i++) {
             const checkDate = new Date();
             checkDate.setDate(today.getDate() - i);
-            
-            const hasCompletedTask = this.tasks.some(task => 
+
+            const hasCompletedTask = this.tasks.some(task =>
                 task.completed && new Date(task.createdAt).toDateString() === checkDate.toDateString()
             );
-            
+
             if (hasCompletedTask) streak++;
             else break;
         }
-        
+
         return streak;
     }
 
@@ -1454,7 +1452,8 @@ calculateProductivityScore() {
                     display: flex;
                     align-items: center;
                     gap: 10px;
-                    max-width: 300px;
+                    max-width: 320px;
+                    white-space: pre-line;
                     animation: slideIn 0.3s ease;
                 }
                 .notification-success { background: #10B981; }
@@ -1497,7 +1496,7 @@ calculateProductivityScore() {
         activityItem.className = `activity-item ${isError ? 'error' : ''}`;
         activityItem.innerHTML = `
             <span class="activity-time">${new Date().toLocaleTimeString()}</span>
-            <span class="activity-text">${message}</span>
+            <span class="activity-text">${this.escapeHtml(message)}</span>
         `;
         this.activityFeed.prepend(activityItem);
 
@@ -1508,17 +1507,21 @@ calculateProductivityScore() {
     }
 }
 
-// ==========================================================
 // GLOBAL FUNCTIONS
-// ==========================================================
-function showPage(pageType) {
+function showPage(pageType, clickedBtn) {
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    event.target.classList.add('active');
-    
-    document.getElementById('contentArea').innerHTML = '<div class="loading">Loading...</div>';
-    
+
+    if (clickedBtn) {
+        clickedBtn.classList.add('active');
+    }
+
+    const contentArea = document.getElementById('contentArea');
+    if (!contentArea) return;
+
+    contentArea.innerHTML = '<div class="loading">Loading...</div>';
+
     setTimeout(() => {
         if (pageType === 'tasks-content') {
             loadTasksContent();
@@ -1529,66 +1532,33 @@ function showPage(pageType) {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(html, 'text/html');
                     const content = doc.querySelector('main') || doc.querySelector('.main-content') || doc.body;
-                    document.getElementById('contentArea').innerHTML = content.innerHTML;
+                    contentArea.innerHTML = content.innerHTML;
                 })
-                .catch(error => {
-                    document.getElementById('contentArea').innerHTML = '<div class="error">Error loading page</div>';
+                .catch(() => {
+                    contentArea.innerHTML = '<div class="error">Error loading page</div>';
                 });
         }
     }, 300);
 }
 
 function loadTasksContent() {
-    document.getElementById('contentArea').innerHTML = `
+    const contentArea = document.getElementById('contentArea');
+    const grid = document.querySelector('.grid');
+    const bottomStrip = document.querySelector('.bottom-strip');
+
+    if (!contentArea || !grid || !bottomStrip) return;
+
+    contentArea.innerHTML = `
         <section class="grid" data-aos="fade-up" data-aos-duration="3000">
-            ${document.querySelector('.grid').outerHTML}
+            ${grid.outerHTML}
         </section>
         <section class="bottom-strip" data-aos="fade-up" data-aos-duration="2500">
-            ${document.querySelector('.bottom-strip').outerHTML}
+            ${bottomStrip.outerHTML}
         </section>
     `;
 }
 
-// ==========================================================
 // INITIALIZE APPLICATION
-// ==========================================================
 document.addEventListener('DOMContentLoaded', () => {
     new LifeBoardApp();
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
