@@ -122,7 +122,7 @@ app.post('/api/productivity-tip', async (req, res) => {
     }
 });
 
-app.get('/{*splat}', (req, res) => {
+app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
